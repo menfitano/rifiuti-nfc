@@ -3,111 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Raccolta Rifiuti</title>
+    <title>Calendario Raccolta Rifiuti</title>
     <style>
         body {
-            background-color: #f0f0f0;
+            background-color: #f0f2f5;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #333;
         }
+
         .container {
-            width: 320px;
-            background: #ffffff;
+            width: 90%;
+            max-width: 400px;
+            background-color: #ffffff;
             border-radius: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
+            padding: 25px;
+            box-sizing: border-box;
         }
-        .date {
-            font-size: 1.2rem;
-            color: #333;
-            margin-bottom: 5px;
-        }
-        .time {
-            font-size: 1rem;
-            color: #777;
+
+        .date-section {
+            text-align: center;
             margin-bottom: 20px;
+            width: 100%;
         }
-        .tomorrow {
-            font-size: 1.2rem;
-            color: #333;
-            margin-bottom: 10px;
+
+        .label {
+            font-size: 0.9rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+            display: block;
         }
-        .waste-type {
-            font-size: 1.5rem;
-            color: #333;
+
+        .full-date {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #222;
+        }
+
+        .tomorrow-day {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #222;
+            margin-top: 5px;
+        }
+
+        .divider {
+            width: 80%;
+            height: 1px;
+            background-color: #eee;
+            margin: 15px 0;
+        }
+
+        .waste-main {
+            font-size: 1.6rem;
             font-weight: bold;
+            color: #222;
+            text-align: center;
             margin-bottom: 15px;
         }
+
+        .icons-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
         .icon {
-            font-size: 3rem;
-            margin-bottom: 15px;
+            font-size: 3.5rem;
         }
+
         .instruction {
-            font-size: 1rem;
-            color: #555;
+            font-size: 1.05rem;
+            color: #444;
+            text-align: center;
             line-height: 1.5;
+            margin-bottom: 25px;
         }
+
         .footer {
-            margin-top: 20px;
             font-size: 0.8rem;
-            color: #888;
+            color: #999;
+            margin-top: auto;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+            width: 100%;
+            text-align: center;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="date" id="date"></div>
-        <div class="time" id="time"></div>
-        <div class="tomorrow" id="tomorrow"></div>
-        <div class="waste-type" id="waste-type"></div>
-        <div class="icon" id="icon"></div>
-        <div class="instruction" id="instruction"></div>
+        <!-- SEZIONE OGGI -->
+        <div class="date-section">
+            <span class="label">Oggi:</span>
+            <div class="full-date" id="today-date-formatted"></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- SEZIONE DOMANI -->
+        <div class="date-section">
+            <span class="label">Domani:</span>
+            <div class="tomorrow-day" id="tomorrow-day-name"></div>
+            <div class="full-date" id="tomorrow-date-formatted"></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- DETTAGLI RACCOLTA -->
+        <div class="waste-main" id="waste-type-main"></div>
+
+        <div class="icons-container" id="waste-icons">
+            <!-- Le icone verranno inserite qui -->
+        </div>
+
+        <div class="instruction" id="waste-instruction">
+            <!-- L'istruzione verrà inserita qui -->
+        </div>
+
         <div class="footer">Creato da PENDOLAS</div>
-    }
+    </div>
 
     <script>
-        // Calendario della raccolta (personalizzalo con i tuoi dati)
-        const calendario = {
-            'Domenica': { tipo: 'Verde e Pulizia strade', icon: '🌳 🚗' },
-            'Lunedì': { tipo: 'Umido e Indifferenziata', icon: '💩 🗑️' },
-            'Martedì': { tipo: 'Plastica', icon: '🍾' },
-            'Mercoledì': { tipo: 'Carta', icon: '📰' },
-            'Giovedì': { tipo: 'Umido e Vetro', icon: '💩 🍾' },
-            'Venerdì': { tipo: 'Nessuna raccolta', icon: '❌' },
-            'Sabato': { tipo: 'Nessuna raccolta', icon: '❌' }
+        // --- IL TUO CALENDARIO DEI RIFIUTI ---
+        // 'Giorno': ['Descrizione Testuale', 'Icone/Emoji']
+        const calendarioRifiuti = {
+            'Lunedì': ['Verde e Pulizia strade', '🌳🚗'],
+            'Martedì': ['Umido e Indifferenziata', '💩🗑️'],
+            'Mercoledì': ['Plastica', '🍾'], // Nota: ho usato '🍾' come da tuo testo, se preferisci '🟡 Sacco Giallo' cambialo qui
+            'Giovedì': ['Carta', '📰'],
+            'Venerdì': ['Umido e Vetro', '💩🍾'],
+            'Sabato': ['Nessuna raccolta', '❌'],
+            'Domenica': ['Nessuna raccolta', '❌']
         };
 
-        const giorniSettimana = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
-        const mesi = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+        const nomiGiorni = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
+        const nomiMesi = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
 
-        function getDatiDomani() {
-            const oggi = new Date();
-            const domani = new Date(oggi);
-            domani.setDate(oggi.getDate() + 1);
-            return domani;
+        // Funzione per formattare la data per esteso (es: Lunedì 12 Febbraio 2024)
+        function formattaDataEstesa(data) {
+            const giornoNome = nomiGiorni[data.getDay()];
+            const giornoNum = data.getDate();
+            const meseNome = nomiMesi[data.getMonth()];
+            const anno = data.getFullYear();
+            return `${giornoNome} ${giornoNum} ${meseNome} ${anno}`;
         }
 
-        const domani = getDatiDomani();
-        const giornoDomaniIdx = domani.getDay();
-        const giornoDomaniNome = giorniSettimana[giornoDomaniIdx];
-        const dataDomani = domani.getDate() + ' ' + mesi[domani.getMonth()] + ' ' + domani.getFullYear();
+        // --- CALCOLO DATE ---
+        const oggi = new Date();
+        const domani = new Date(oggi);
+        domani.setDate(oggi.getDate() + 1);
 
-        const raccoltaDomani = calendario[giornoDomaniNome];
+        // --- AGGIORNAMENTO INTERFACCIA (OGGI E DOMANI) ---
+        document.getElementById('today-date-formatted').textContent = formattaDataEstesa(oggi);
+        
+        const nomeGiornoDomani = nomiGiorni[domani.getDay()];
+        document.getElementById('tomorrow-day-name').textContent = nomeGiornoDomani.toUpperCase();
+        document.getElementById('tomorrow-date-formatted').textContent = formattaDataEstesa(domani);
 
-        document.getElementById('date').innerHTML = "Oggi: " + giorniSettimana[new Date().getDay()] + " " + new Date().getDate() + " " + mesi[new Date().getMonth()] + " " + new Date().getFullYear();
-        document.getElementById('time').innerHTML = "Aggiornato alle: " + new Date().toLocaleTimeString('it-IT');
-        document.getElementById('tomorrow').innerHTML = "DOMANI, " + giornoDomaniNome;
-        document.getElementById('waste-type').innerHTML = raccoltaDomani.tipo;
-        document.getElementById('icon').innerHTML = raccoltaDomani.icon;
-        document.getElementById('instruction').innerHTML = "Mettere fuori: " + raccoltaDomani.tipo;
+        // --- RECUPERO DATI RIFIUTI PER DOMANI ---
+        const datiRaccoltaDomani = calendarioRifiuti[nomeGiornoDomani];
+
+        if (datiRaccoltaDomani) {
+            const descrizione = datiRaccoltaDomani[0];
+            const iconeStr = datiRaccoltaDomani[1];
+
+            // Aggiorna Titolo Principale
+            document.getElementById('waste-type-main').textContent = descrizione.toUpperCase();
+
+            // Aggiorna Icone
+            const containerIcone = document.getElementById('waste-icons');
+            containerIcone.innerHTML = ''; // Pulisce icone precedenti
+            // Split delle emoji (gestisce correttamente le emoji composte)
+            const iconeArray = [...iconeStr]; 
+            iconeArray.forEach(icona => {
+                const span = document.createElement('span');
+                span.className = 'icon';
+                span.textContent = icona;
+                containerIcone.appendChild(span);
+            });
+
+            // Aggiorna Istruzione Completa
+            document.getElementById('waste-instruction').textContent = `Mettere fuori: ${descrizione} (${nomeGiornoDomani})`;
+        }
     </script>
 </body>
 </html>
