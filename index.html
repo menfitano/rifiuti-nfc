@@ -49,11 +49,11 @@
       color: #888;
     }
     .waste-icon {
-      font-size: 4rem;
+      font-size: 3.5rem;
       margin-bottom: 15px;
     }
     .waste-name {
-      font-size: 2rem;
+      font-size: 1.8rem;
       font-weight: bold;
       margin-bottom: 10px;
     }
@@ -85,16 +85,16 @@
   </div>
 
   <script>
-    // Tabella della raccolta differenziata in base al giorno della settimana (0 = Domenica, 1 = Lunedì, ecc.)
-    // La logica mostra il rifiuto da esporre STASERA per il ritiro di DOMANI.
+    // Calendario basato sul giorno in cui preparare i rifiuti (STASERA) per la raccolta di DOMANI.
+    // 0 = Domenica sera, 1 = Lunedì sera, ecc.
     const schedule = {
-      0: { name: "Umido / Organico", icon: "🍏", desc: "Metti fuori il bidoncino marrone dell'umido.", color: "#8d6e63" },     // Domenica sera -> Lunedì
-      1: { name: "Plastica e Metalli", icon: "🟡", desc: "Metti fuori il sacco giallo della plastica.", color: "#fbc02d" },    // Lunedì sera -> Martedì
-      2: { name: "Carta e Cartone", icon: "🟦", desc: "Metti fuori il contenitore blu della carta.", color: "#1e88e5" },       // Martedì sera -> Mercoledì
-      3: { name: "Secco Indifferenziato", icon: "⬛", desc: "Metti fuori il bidone grigio del secco.", color: "#757575" },     // Mercoledì sera -> Giovedì
-      4: { name: "Umido / Organico", icon: "🍏", desc: "Metti fuori il bidoncino marrone dell'umido.", color: "#8d6e63" },     // Giovedì sera -> Venerdì
-      5: { name: "Vetro", icon: "🟢", desc: "Metti fuori il bidone verde del vetro.", color: "#4caf50" },                     // Venerdì sera -> Sabato
-      6: { name: "Nessuna Raccolta", icon: "😴", desc: "Stasera non c'è alcun rifiuto da esporre.", color: "#333333" }        // Sabato sera -> Domenica
+      0: { name: "Verde e Pulizia Strade", icon: "🌳🚗", desc: "Esponi il verde e attenzione al divieto per pulizia strade (Lunedì).", color: "#4caf50" }, // Dom sera -> Lun
+      1: { name: "Umido e Indifferenziata", icon: "💩🗑️", desc: "Metti fuori l'organico e il bidone grigio dell'indifferenziata (Martedì).", color: "#8d6e63" }, // Lun sera -> Mar
+      2: { name: "Plastica", icon: "🍾", desc: "Metti fuori il sacco giallo della plastica (Mercoledì).", color: "#fbc02d" }, // Mar sera -> Mer
+      3: { name: "Carta", icon: "📰", desc: "Metti fuori il contenitore/sacco della carta (Giovedì).", color: "#1e88e5" }, // Mer sera -> Gio
+      4: { name: "Umido e Vetro", icon: "💩🍾", desc: "Metti fuori l'organico e il bidone del vetro (Venerdì).", color: "#4caf50" }, // Gio sera -> Ven
+      5: { name: "Nessuna Raccolta", icon: "❌", desc: "Stasera non c'è alcun rifiuto da esporre per domani.", color: "#757575" }, // Ven sera -> Sab
+      6: { name: "Nessuna Raccolta", icon: "❌", desc: "Stasera non c'è alcun rifiuto da esporre per domani.", color: "#757575" }  // Sab sera -> Dom
     };
 
     const daysOfWeek = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
