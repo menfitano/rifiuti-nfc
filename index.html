@@ -5,23 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendario Raccolta Rifiuti</title>
     <style>
+        /* Impostazioni di base per lo sfondo scuro */
         body {
-            background-color: #f0f2f5;
+            background-color: #1a1a1a; /* Grigio molto scuro come richiesto */
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            color: #333;
+            color: #f0f0f0; /* Testo chiaro di base */
         }
 
+        /* Container principale della card */
         .container {
             width: 90%;
-            max-width: 400px;
-            background-color: #ffffff;
+            max-width: 400px; /* Larghezza massima simile all'app */
+            background-color: #ffffff; /* La card rimane bianca per contrasto */
             border-radius: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); /* Ombra più definita sullo sfondo scuro */
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -30,12 +32,14 @@
             box-sizing: border-box;
         }
 
+        /* Sezione per le date (Oggi e Domani) */
         .date-section {
             text-align: center;
             margin-bottom: 20px;
             width: 100%;
         }
 
+        /* Etichette "Oggi:" e "Domani:" */
         .label {
             font-size: 0.9rem;
             color: #666;
@@ -45,12 +49,14 @@
             display: block;
         }
 
+        /* Data formattata per esteso */
         .full-date {
             font-size: 1.1rem;
             font-weight: 600;
-            color: #222;
+            color: #222; /* Testo scuro sulla card bianca */
         }
 
+        /* Nome del giorno di domani in grande */
         .tomorrow-day {
             font-size: 1.4rem;
             font-weight: 700;
@@ -58,6 +64,7 @@
             margin-top: 5px;
         }
 
+        /* Separatori orizzontali sottili */
         .divider {
             width: 80%;
             height: 1px;
@@ -65,6 +72,7 @@
             margin: 15px 0;
         }
 
+        /* Titolo principale del rifiuto in maiuscolo */
         .waste-main {
             font-size: 1.6rem;
             font-weight: bold;
@@ -73,6 +81,7 @@
             margin-bottom: 15px;
         }
 
+        /* Container per le icone */
         .icons-container {
             display: flex;
             gap: 15px;
@@ -80,10 +89,12 @@
             justify-content: center;
         }
 
+        /* Stile per le singole icone (emoji grandi) */
         .icon {
             font-size: 3.5rem;
         }
 
+        /* Testo dell'istruzione completa */
         .instruction {
             font-size: 1.05rem;
             color: #444;
@@ -92,6 +103,7 @@
             margin-bottom: 25px;
         }
 
+        /* Footer con il copyright */
         .footer {
             font-size: 0.8rem;
             color: #999;
@@ -113,7 +125,7 @@
 
         <div class="divider"></div>
 
-        <!-- SEZIONE DOMANI -->
+        <!-- SEZIONE DOMANI (Calcolata dinamicamente) -->
         <div class="date-section">
             <span class="label">Domani:</span>
             <div class="tomorrow-day" id="tomorrow-day-name"></div>
@@ -122,15 +134,15 @@
 
         <div class="divider"></div>
 
-        <!-- DETTAGLI RACCOLTA -->
+        <!-- DETTAGLI RACCOLTA (Popolati dinamicamente) -->
         <div class="waste-main" id="waste-type-main"></div>
 
         <div class="icons-container" id="waste-icons">
-            <!-- Le icone verranno inserite qui -->
+            <!-- Le icone verranno inserite qui dal JS -->
         </div>
 
         <div class="instruction" id="waste-instruction">
-            <!-- L'istruzione verrà inserita qui -->
+            <!-- L'istruzione verrà inserita qui dal JS -->
         </div>
 
         <div class="footer">Creato da PENDOLAS</div>
@@ -142,7 +154,7 @@
         const calendarioRifiuti = {
             'Lunedì': ['Verde e Pulizia strade', '🌳🚗'],
             'Martedì': ['Umido e Indifferenziata', '💩🗑️'],
-            'Mercoledì': ['Plastica', '🍾'], // Nota: ho usato '🍾' come da tuo testo, se preferisci '🟡 Sacco Giallo' cambialo qui
+            'Mercoledì': ['Plastica', '🍾'],
             'Giovedì': ['Carta', '📰'],
             'Venerdì': ['Umido e Vetro', '💩🍾'],
             'Sabato': ['Nessuna raccolta', '❌'],
@@ -167,20 +179,23 @@
         domani.setDate(oggi.getDate() + 1);
 
         // --- AGGIORNAMENTO INTERFACCIA (OGGI E DOMANI) ---
+        // Mostra la data di oggi formattata
         document.getElementById('today-date-formatted').textContent = formattaDataEstesa(oggi);
         
+        // Calcola e mostra i dettagli di domani
         const nomeGiornoDomani = nomiGiorni[domani.getDay()];
         document.getElementById('tomorrow-day-name').textContent = nomeGiornoDomani.toUpperCase();
         document.getElementById('tomorrow-date-formatted').textContent = formattaDataEstesa(domani);
 
         // --- RECUPERO DATI RIFIUTI PER DOMANI ---
+        // Cerca nel calendario il giorno corrispondente a domani
         const datiRaccoltaDomani = calendarioRifiuti[nomeGiornoDomani];
 
         if (datiRaccoltaDomani) {
             const descrizione = datiRaccoltaDomani[0];
             const iconeStr = datiRaccoltaDomani[1];
 
-            // Aggiorna Titolo Principale
+            // Aggiorna Titolo Principale in maiuscolo
             document.getElementById('waste-type-main').textContent = descrizione.toUpperCase();
 
             // Aggiorna Icone
