@@ -1,121 +1,113 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Raccolta Differenziata</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
-    body {
-      background-color: #121212;
-      color: #ffffff;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-      text-align: center;
-    }
-    .card {
-      background: #1e1e1e;
-      border-radius: 20px;
-      padding: 30px 20px;
-      width: 100%;
-      max-width: 380px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-      border: 1px solid #333;
-    }
-    .day-title {
-      font-size: 1.1rem;
-      color: #aaa;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      margin-bottom: 15px;
-    }
-    .badge {
-      display: inline-block;
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      font-weight: bold;
-      margin-bottom: 25px;
-      background: #2a2a2a;
-      color: #888;
-    }
-    .waste-icon {
-      font-size: 3.5rem;
-      margin-bottom: 15px;
-    }
-    .waste-name {
-      font-size: 1.8rem;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-    .waste-desc {
-      font-size: 1rem;
-      color: #bbb;
-      line-height: 1.4;
-    }
-    .footer {
-      margin-top: 30px;
-      font-size: 0.8rem;
-      color: #555;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raccolta Rifiuti</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        .container {
+            width: 320px;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .date {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .time {
+            font-size: 1rem;
+            color: #777;
+            margin-bottom: 20px;
+        }
+        .tomorrow {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .waste-type {
+            font-size: 1.5rem;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        .instruction {
+            font-size: 1rem;
+            color: #555;
+            line-height: 1.5;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: #888;
+        }
+    </style>
 </head>
 <body>
-
-  <div class="card">
-    <div class="day-title" id="today-name">Oggi</div>
-    <div class="badge">Esporre Stasera</div>
-    
-    <div class="waste-icon" id="waste-icon">🗑️</div>
-    <div class="waste-name" id="waste-name">Caricamento...</div>
-    <div class="waste-desc" id="waste-desc"></div>
-  </div>
-
-  <div class="footer">
-    Creato da <strong>PENDOLAS</strong>
-  </div>
-
-  <script>
-    // Calendario basato sul giorno in cui preparare i rifiuti (STASERA) per la raccolta di DOMANI.
-    // 0 = Domenica sera, 1 = Lunedì sera, ecc.
-    const schedule = {
-      0: { name: "Verde e Pulizia Strade", icon: "🌳🚗", desc: "Esponi il verde e attenzione al divieto per pulizia strade (Lunedì).", color: "#4caf50" }, // Dom sera -> Lun
-      1: { name: "Umido e Indifferenziata", icon: "💩🗑️", desc: "Metti fuori l'organico e il bidone grigio dell'indifferenziata (Martedì).", color: "#8d6e63" }, // Lun sera -> Mar
-      2: { name: "Plastica", icon: "🍾", desc: "Metti fuori il sacco giallo della plastica (Mercoledì).", color: "#fbc02d" }, // Mar sera -> Mer
-      3: { name: "Carta", icon: "📰", desc: "Metti fuori il contenitore/sacco della carta (Giovedì).", color: "#1e88e5" }, // Mer sera -> Gio
-      4: { name: "Umido e Vetro", icon: "💩🍾", desc: "Metti fuori l'organico e il bidone del vetro (Venerdì).", color: "#4caf50" }, // Gio sera -> Ven
-      5: { name: "Nessuna Raccolta", icon: "❌", desc: "Stasera non c'è alcun rifiuto da esporre per domani.", color: "#757575" }, // Ven sera -> Sab
-      6: { name: "Nessuna Raccolta", icon: "❌", desc: "Stasera non c'è alcun rifiuto da esporre per domani.", color: "#757575" }  // Sab sera -> Dom
-    };
-
-    const daysOfWeek = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
-
-    const now = new Date();
-    const currentDay = now.getDay();
-
-    const todayElement = document.getElementById('today-name');
-    const nameElement = document.getElementById('waste-name');
-    const iconElement = document.getElementById('waste-icon');
-    const descElement = document.getElementById('waste-desc');
-
-    todayElement.innerText = daysOfWeek[currentDay] + " Stasera";
-
-    const waste = schedule[currentDay];
-    if (waste) {
-      nameElement.innerText = waste.name;
-      iconElement.innerText = waste.icon;
-      descElement.innerText = waste.desc;
-      nameElement.style.color = waste.color;
+    <div class="container">
+        <div class="date" id="date"></div>
+        <div class="time" id="time"></div>
+        <div class="tomorrow" id="tomorrow"></div>
+        <div class="waste-type" id="waste-type"></div>
+        <div class="icon" id="icon"></div>
+        <div class="instruction" id="instruction"></div>
+        <div class="footer">Creato da PENDOLAS</div>
     }
-  </script>
+
+    <script>
+        // Calendario della raccolta (personalizzalo con i tuoi dati)
+        const calendario = {
+            'Domenica': { tipo: 'Verde e Pulizia strade', icon: '🌳 🚗' },
+            'Lunedì': { tipo: 'Umido e Indifferenziata', icon: '💩 🗑️' },
+            'Martedì': { tipo: 'Plastica', icon: '🍾' },
+            'Mercoledì': { tipo: 'Carta', icon: '📰' },
+            'Giovedì': { tipo: 'Umido e Vetro', icon: '💩 🍾' },
+            'Venerdì': { tipo: 'Nessuna raccolta', icon: '❌' },
+            'Sabato': { tipo: 'Nessuna raccolta', icon: '❌' }
+        };
+
+        const giorniSettimana = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
+        const mesi = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+
+        function getDatiDomani() {
+            const oggi = new Date();
+            const domani = new Date(oggi);
+            domani.setDate(oggi.getDate() + 1);
+            return domani;
+        }
+
+        const domani = getDatiDomani();
+        const giornoDomaniIdx = domani.getDay();
+        const giornoDomaniNome = giorniSettimana[giornoDomaniIdx];
+        const dataDomani = domani.getDate() + ' ' + mesi[domani.getMonth()] + ' ' + domani.getFullYear();
+
+        const raccoltaDomani = calendario[giornoDomaniNome];
+
+        document.getElementById('date').innerHTML = "Oggi: " + giorniSettimana[new Date().getDay()] + " " + new Date().getDate() + " " + mesi[new Date().getMonth()] + " " + new Date().getFullYear();
+        document.getElementById('time').innerHTML = "Aggiornato alle: " + new Date().toLocaleTimeString('it-IT');
+        document.getElementById('tomorrow').innerHTML = "DOMANI, " + giornoDomaniNome;
+        document.getElementById('waste-type').innerHTML = raccoltaDomani.tipo;
+        document.getElementById('icon').innerHTML = raccoltaDomani.icon;
+        document.getElementById('instruction').innerHTML = "Mettere fuori: " + raccoltaDomani.tipo;
+    </script>
 </body>
 </html>
