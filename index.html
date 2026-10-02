@@ -78,10 +78,13 @@
             gap: 15px;
             margin-bottom: 20px;
             justify-content: center;
+            align-items: center;
         }
 
-        .icon {
-            font-size: 3.5rem;
+        .waste-img {
+            max-width: 160px;
+            height: auto;
+            object-fit: contain;
         }
 
         .instruction {
@@ -126,7 +129,7 @@
         <div class="waste-main" id="waste-type-main"></div>
 
         <div class="icons-container" id="waste-icons">
-            <!-- Le icone verranno inserite qui -->
+            <!-- Le immagini verranno inserite qui -->
         </div>
 
         <div class="instruction" id="waste-instruction">
@@ -137,22 +140,20 @@
     </div>
 
     <script>
-        // --- IL TUO CALENDARIO DEI RIFIUTI ---
-        // 'Giorno': ['Descrizione Testuale', 'Icone/Emoji']
+        // Mappatura giorni -> Immagini caricate nel repository GitHub
         const calendarioRifiuti = {
-            'Lunedì': ['Verde e Pulizia strade', '🌳🚗'],
-            'Martedì': ['Umido e Indifferenziata', '💩🗑️'],
-            'Mercoledì': ['Plastica', '🍾'], // Nota: ho usato '🍾' come da tuo testo, se preferisci '🟡 Sacco Giallo' cambialo qui
-            'Giovedì': ['Carta', '📰'],
-            'Venerdì': ['Umido e Vetro', '💩🍾'],
-            'Sabato': ['Nessuna raccolta', '❌'],
-            'Domenica': ['Nessuna raccolta', '❌']
+            'Lunedì': ['Verde e Pulizia strade', ['verde-auto.png']],
+            'Martedì': ['Umido e Indifferenziata', ['umido-indifferenziata.png']],
+            'Mercoledì': ['Plastica', ['plastica.png']],
+            'Giovedì': ['Carta', ['carta.png']],
+            'Venerdì': ['Umido e Vetro', ['umido-vetro.png']],
+            'Sabato': ['Nessuna raccolta', ['nieterifiuti.png']],
+            'Domenica': ['Nessuna raccolta', ['nieterifiuti.png']]
         };
 
         const nomiGiorni = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
         const nomiMesi = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
 
-        // Funzione per formattare la data per esteso (es: Lunedì 12 Febbraio 2024)
         function formattaDataEstesa(data) {
             const giornoNome = nomiGiorni[data.getDay()];
             const giornoNum = data.getDate();
@@ -161,42 +162,35 @@
             return `${giornoNome} ${giornoNum} ${meseNome} ${anno}`;
         }
 
-        // --- CALCOLO DATE ---
         const oggi = new Date();
         const domani = new Date(oggi);
         domani.setDate(oggi.getDate() + 1);
 
-        // --- AGGIORNAMENTO INTERFACCIA (OGGI E DOMANI) ---
         document.getElementById('today-date-formatted').textContent = formattaDataEstesa(oggi);
         
         const nomeGiornoDomani = nomiGiorni[domani.getDay()];
         document.getElementById('tomorrow-day-name').textContent = nomeGiornoDomani.toUpperCase();
         document.getElementById('tomorrow-date-formatted').textContent = formattaDataEstesa(domani);
 
-        // --- RECUPERO DATI RIFIUTI PER DOMANI ---
         const datiRaccoltaDomani = calendarioRifiuti[nomeGiornoDomani];
 
         if (datiRaccoltaDomani) {
             const descrizione = datiRaccoltaDomani[0];
-            const iconeStr = datiRaccoltaDomani[1];
+            const immaginiArray = datiRaccoltaDomani[1];
 
-            // Aggiorna Titolo Principale
             document.getElementById('waste-type-main').textContent = descrizione.toUpperCase();
 
-            // Aggiorna Icone
             const containerIcone = document.getElementById('waste-icons');
-            containerIcone.innerHTML = ''; // Pulisce icone precedenti
-            // Split delle emoji (gestisce correttamente le emoji composte)
-            const iconeArray = [...iconeStr]; 
-            iconeArray.forEach(icona => {
-                const span = document.createElement('span');
-                span.className = 'icon';
-                span.textContent = icona;
-                containerIcone.appendChild(span);
+            containerIcone.innerHTML = '';
+            
+            immaginiArray.forEach(srcImmagine => {
+                const img = document.createElement('img');
+                img.className = 'waste-img';
+                img.src = srcImmagine;
+                img.alt = descrizione;
+                containerIcone.appendChild(img);
             });
 
-            // Aggiorna Istruzione Completa
-            // MODIFICA: Ho rimosso `(${nomeGiornoDomani})` alla fine della stringa
             document.getElementById('waste-instruction').textContent = `Mettere fuori: ${descrizione}`;
         }
     </script>
