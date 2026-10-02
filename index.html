@@ -16,18 +16,36 @@
             color: #333;
         }
 
+        /* Animazione per far lampeggiare la cornice in verde lime */
+        @keyframes pulseLime {
+            0% {
+                border-color: #32cd32;
+                box-shadow: 0 0 10px rgba(50, 205, 50, 0.3);
+            }
+            50% {
+                border-color: #76ff03;
+                box-shadow: 0 0 25px rgba(118, 255, 3, 0.8);
+            }
+            100% {
+                border-color: #32cd32;
+                box-shadow: 0 0 10px rgba(50, 205, 50, 0.3);
+            }
+        }
+
         .container {
             width: 90%;
             max-width: 400px;
             background-color: #ffffff;
             border-radius: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 4px solid #32cd32;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 25px;
             box-sizing: border-box;
+            /* Applicazione dell'animazione pulsante/lampeggiante */
+            animation: pulseLime 2s infinite ease-in-out;
         }
 
         .date-section {
@@ -140,7 +158,6 @@
     </div>
 
     <script>
-        // Mappatura giorni -> Immagini caricate nel repository GitHub
         const calendarioRifiuti = {
             'Lunedì': ['Verde e Pulizia strade', ['verde-auto.png']],
             'Martedì': ['Umido e Indifferenziata', ['umido-indifferenziata.png']],
